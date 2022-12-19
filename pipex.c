@@ -6,7 +6,7 @@
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 13:50:16 by hahlee            #+#    #+#             */
-/*   Updated: 2022/12/18 20:44:35 by hahlee           ###   ########.fr       */
+/*   Updated: 2022/12/19 17:11:35 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,7 @@ int	main(int argc, char *argv[])
 	if (argc != 5)
 		return (0);
 	if (pipe(fds) == -1)
-		return (0); //에러 시 어떻게 처리할 것인지
-
-	//자식이 하나인 경우
+		return (0);
 	pid = fork();
 	if (pid > 0)
 	{
@@ -34,11 +32,11 @@ int	main(int argc, char *argv[])
 	{
 		fd = open(argv[1], O_RDWR | O_CREAT, 0644);
 		if (fd == -1)
-			return (0); //에러 시 어떻게 처리할 것인지
+			return (0);
 		dup2(fd, 0);
 		dup2(fds[WRITE], 1);
 	}
 	else
-		return (0); //에러 시 어떻게 처리할 것인지
+		return (0);
 	return (0);
 }
