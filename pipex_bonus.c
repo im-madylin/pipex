@@ -6,9 +6,11 @@
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/22 13:53:53 by hahlee            #+#    #+#             */
-/*   Updated: 2022/12/22 13:58:08 by hahlee           ###   ########.fr       */
+/*   Updated: 2022/12/22 21:11:43 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "pipex.h"
 
 int	middle_child(char *com, int fds[])
 {
