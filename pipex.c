@@ -6,7 +6,7 @@
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 13:50:16 by hahlee            #+#    #+#             */
-/*   Updated: 2022/12/22 22:19:41 by hahlee           ###   ########.fr       */
+/*   Updated: 2022/12/22 22:31:52 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,23 @@
 
 char	*check_command(char *com, char *envp[])
 {
-	//access로 커맨드 정상여부 확인
-	//$PATH의 경로를 추출해오는 방법 확인해서, 콜론을 기준으로 쪼개 명령어 앞에 붙이고 access 검증
-	(void)com;
-	(void)envp;
+	char	**path;
+	char	*temp;
+	int		i;
+
+	i = 0;
+	while (envp[i])
+	{
+		temp = ft_strnstr(envp[i], "PATH=", -1);
+		if (temp != NULL)
+		{
+			path = ft_split(temp + 5, ':');
+			break ;
+		}
+		i++;
+	}
+	//access
+	
 	return (0);
 }
 
