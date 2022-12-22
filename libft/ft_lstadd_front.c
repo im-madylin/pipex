@@ -1,24 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_lstadd_front.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hahlee <hahlee@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/28 13:49:32 by hahlee            #+#    #+#             */
-/*   Updated: 2022/12/22 21:09:33 by hahlee           ###   ########.fr       */
+/*   Created: 2022/08/01 16:32:00 by hahlee            #+#    #+#             */
+/*   Updated: 2022/08/01 18:04:59 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#include "libft.h"
 
-# include <unistd.h>
-# include <stdlib.h>
-# include <fcntl.h>
-# include "../libft/libft.h"
+void	ft_lstadd_front(t_list **lst, t_list *new)
+{
+	t_list	*tmp;
 
-# define READ 0
-# define WRITE 1
-
-#endif
+	if (lst == NULL)
+		return ;
+	tmp = *lst;
+	*lst = new;
+	(*lst)->next = tmp;
+}

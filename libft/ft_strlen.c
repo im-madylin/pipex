@@ -1,24 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/28 13:49:32 by hahlee            #+#    #+#             */
-/*   Updated: 2022/12/22 21:09:33 by hahlee           ###   ########.fr       */
+/*   Created: 2022/07/06 17:00:27 by hahlee            #+#    #+#             */
+/*   Updated: 2022/07/15 15:21:58 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#include "libft.h"
 
-# include <unistd.h>
-# include <stdlib.h>
-# include <fcntl.h>
-# include "../libft/libft.h"
+size_t	ft_strlen(const char *s)
+{
+	size_t	count;
+	int		i;
 
-# define READ 0
-# define WRITE 1
-
-#endif
+	i = 0;
+	count = 0;
+	while (s[i])
+	{
+		count++;
+		i++;
+	}
+	return (count);
+}

@@ -1,24 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/28 13:49:32 by hahlee            #+#    #+#             */
-/*   Updated: 2022/12/22 21:09:33 by hahlee           ###   ########.fr       */
+/*   Created: 2022/07/14 13:32:36 by hahlee            #+#    #+#             */
+/*   Updated: 2022/07/15 14:51:27 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#include "libft.h"
 
-# include <unistd.h>
-# include <stdlib.h>
-# include <fcntl.h>
-# include "../libft/libft.h"
+void	*ft_memset(void *b, int c, size_t len)
+{
+	unsigned char	*ptr;
+	unsigned char	value;
+	size_t			i;
 
-# define READ 0
-# define WRITE 1
-
-#endif
+	ptr = (unsigned char *)b;
+	value = (unsigned char)c;
+	i = 0;
+	while (i < len)
+	{
+		ptr[i] = value;
+		i++;
+	}
+	return (b);
+}

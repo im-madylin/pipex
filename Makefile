@@ -6,7 +6,7 @@
 #    By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/28 13:49:22 by hahlee            #+#    #+#              #
-#    Updated: 2022/12/13 20:59:43 by hahlee           ###   ########.fr        #
+#    Updated: 2022/12/22 21:09:58 by hahlee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,12 +31,12 @@ $(MANDATORY_OUTDIR):
 	mkdir $@
 
 clean :
-		$(MAKE) -j -C libft clean
-		$(RM) -r $(OUTDIR)
+	$(MAKE) -j -C libft clean
+	$(RM) -r $(OUTDIR)
 
 fclean : clean
-		$(MAKE) -j -C libft fclean
-		$(RM) -r $(NAME)
+	$(MAKE) -j -C libft fclean
+	$(RM) -r $(NAME)
 
 re :
 	$(MAKE) fclean
@@ -45,4 +45,4 @@ re :
 $(OBJS): $(OUTDIR)%.o: %.c | $(OUTDIR) $(MANDATORY_OUTDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-.PHONY : all bonus clean fclean re bre
+.PHONY : all bonus clean fclean re

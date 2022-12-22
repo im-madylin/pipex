@@ -4,3 +4,7 @@ pipex
 .vscode
 *.o
 *.a
+out
+*.dSYM
+file1
+file2
