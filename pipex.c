@@ -6,88 +6,13 @@
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 13:50:16 by hahlee            #+#    #+#             */
-/*   Updated: 2022/12/23 13:39:44 by hahlee           ###   ########.fr       */
+/*   Updated: 2022/12/23 16:50:38 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
 #include <stdio.h> //
-
-int	check_command(char *com, char *envp[], char **result)
-{
-	char	**path;
-	char	*temp;
-	int		i;
-
-	if (access(com, X_OK) == 0)
-	{
-		*result = com;
-		return (1);
-	}
-	path = split_envp(envp);
-	if (path == NULL)
-		return (-1);
-	temp = ft_strjoin("/", com);
-	if (temp == NULL)
-		return (double_free(path, -1));
-	i = 0;
-	while(path[i])
-	{
-		*result = ft_strjoin(path[i], temp);
-		if (*result == NULL)
-			return (double_free(path, -1), safety_free(temp, -1));
-		if (access(*result, X_OK) == 0)
-			return (double_free(path, 1), safety_free(temp, 1));
-		safety_free(*result, 0);
-		i++;
-	}
-	return (double_free(path, 0), safety_free(temp, 0));
-}
-
-int	double_free(char **str, int result)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		free(str[i]);
-		str[i] = NULL;
-		i++;
-	}
-	free(str);
-	str = NULL;
-	return (result);
-}
-
-int	safety_free(char *str, int result)
-{
-	free(str);
-	str = NULL;
-	return (result);
-}
-
-char	**split_envp(char *envp[])
-{
-	char	**path;
-	char	*temp;
-	int		i;
-
-	path = NULL;
-	i = 0;
-	while (envp[i])
-	{
-		temp = ft_strnstr(envp[i], "PATH=", -1);
-		if (temp != NULL)
-		{
-			path = ft_split(temp + 5, ':');
-			break ;
-		}
-		i++;
-	}
-	return (path);
-}
 
 int	first_child(char *file, char *com, int fds[], char *envp[])
 {
@@ -145,7 +70,7 @@ int	main(int argc, char *argv[], char *envp[])
 {
 	int		fds[2];
 	pid_t	pid;
-	//int		status;
+	int		status;
 	int		i;
 
 	(void)argv;
@@ -160,11 +85,11 @@ int	main(int argc, char *argv[], char *envp[])
 		pid = fork();
 		if (pid > 0)
 		{
-			printf("parents %d, %d\n", pid, i);
+			//
 		}
 		else if (pid == 0)
 		{
-			printf("child %d\n", i);
+			//
 			if (i == 0)
 				first_child(argv[1], argv[2], fds, envp);
 			else if (i == 1)
@@ -175,7 +100,11 @@ int	main(int argc, char *argv[], char *envp[])
 			return (0);
 		i++;
 	}
-	// if (pid > 0)
-	// 	while(wait(&status) != -1); 무한로딩 됨
-	return (0);
+	close(fds[WRITE]);
+	close(fds[READ]);
+
+	int	last_status;
+	waitpid(pid, &last_status, 0);
+	while(wait(&status) != -1);
+	exit (WEXITSTATUS(last_status));
 }
