@@ -6,7 +6,7 @@
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 13:50:16 by hahlee            #+#    #+#             */
-/*   Updated: 2022/12/22 22:31:52 by hahlee           ###   ########.fr       */
+/*   Updated: 2022/12/23 13:39:44 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,67 @@
 
 #include <stdio.h> //
 
-char	*check_command(char *com, char *envp[])
+int	check_command(char *com, char *envp[], char **result)
 {
 	char	**path;
 	char	*temp;
 	int		i;
 
+	if (access(com, X_OK) == 0)
+	{
+		*result = com;
+		return (1);
+	}
+	path = split_envp(envp);
+	if (path == NULL)
+		return (-1);
+	temp = ft_strjoin("/", com);
+	if (temp == NULL)
+		return (double_free(path, -1));
+	i = 0;
+	while(path[i])
+	{
+		*result = ft_strjoin(path[i], temp);
+		if (*result == NULL)
+			return (double_free(path, -1), safety_free(temp, -1));
+		if (access(*result, X_OK) == 0)
+			return (double_free(path, 1), safety_free(temp, 1));
+		safety_free(*result, 0);
+		i++;
+	}
+	return (double_free(path, 0), safety_free(temp, 0));
+}
+
+int	double_free(char **str, int result)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		free(str[i]);
+		str[i] = NULL;
+		i++;
+	}
+	free(str);
+	str = NULL;
+	return (result);
+}
+
+int	safety_free(char *str, int result)
+{
+	free(str);
+	str = NULL;
+	return (result);
+}
+
+char	**split_envp(char *envp[])
+{
+	char	**path;
+	char	*temp;
+	int		i;
+
+	path = NULL;
 	i = 0;
 	while (envp[i])
 	{
@@ -31,9 +86,7 @@ char	*check_command(char *com, char *envp[])
 		}
 		i++;
 	}
-	//access
-	
-	return (0);
+	return (path);
 }
 
 int	first_child(char *file, char *com, int fds[], char *envp[])
@@ -41,6 +94,7 @@ int	first_child(char *file, char *com, int fds[], char *envp[])
 	char	**argv;
 	char	*path;
 	int		fd;
+	int		check;
 
 	close(fds[READ]);
 	fd = open(file, O_RDWR, 0644);
@@ -51,9 +105,11 @@ int	first_child(char *file, char *com, int fds[], char *envp[])
 	argv = ft_split(com, ' ');
 	if (argv == NULL)
 		return (-1);
-	path = check_command(argv[0], envp);
-	if (path == NULL)
-		return (-1); //or exit(127)
+	check = check_command(argv[0], envp, &path);
+	if (check == -1)
+		return (-1);
+	else if (check == 0)
+		exit(127);
 	execve(path, argv, envp);
 	exit(127);
 	return (0);
@@ -64,9 +120,10 @@ int	last_child(char *file, char *com, int fds[], char *envp[])
 	char	**argv;
 	char	*path;
 	int		fd;
+	int		check;
 
 	close(fds[WRITE]);
-	fd = open(file, O_RDWR | O_CREAT, 0644);
+	fd = open(file, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 		return (-1);
 	(dup2(fd, 1), close(fd));
@@ -74,9 +131,11 @@ int	last_child(char *file, char *com, int fds[], char *envp[])
 	argv = ft_split(com, ' ');
 	if (argv == NULL)
 		return (-1);
-	path = check_command(argv[0], envp);
-	if (path == NULL)
-		return (-1); //or exit(127)
+	check = check_command(argv[0], envp, &path);
+	if (check == -1)
+		return (-1);
+	else if (check == 0)
+		exit(127);
 	execve(path, argv, envp);
 	exit(127);
 	return (0);
