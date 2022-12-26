@@ -6,7 +6,7 @@
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 13:49:32 by hahlee            #+#    #+#             */
-/*   Updated: 2022/12/23 14:29:31 by hahlee           ###   ########.fr       */
+/*   Updated: 2022/12/26 20:15:05 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@
 # define READ 0
 # define WRITE 1
 
-int		first_child(char *file, char *com, int fds[], char *envp[]);
-int		last_child(char *file, char *com, int fds[], char *envp[]);
+void	first_child(char *file, char *com, int fds[], char *envp[]);
+void	last_child(char *file, char *com, int fds[], char *envp[]);
 char	**split_envp(char *envp[]);
 int		safety_free(char *str, int result);
 int		double_free(char **str, int result);

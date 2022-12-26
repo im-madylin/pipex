@@ -6,7 +6,7 @@
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 13:50:16 by hahlee            #+#    #+#             */
-/*   Updated: 2022/12/23 16:50:38 by hahlee           ###   ########.fr       */
+/*   Updated: 2022/12/26 20:15:13 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 #include <stdio.h> //
 
-int	first_child(char *file, char *com, int fds[], char *envp[])
+void	first_child(char *file, char *com, int fds[], char *envp[])
 {
 	char	**argv;
 	char	*path;
@@ -24,23 +24,22 @@ int	first_child(char *file, char *com, int fds[], char *envp[])
 	close(fds[READ]);
 	fd = open(file, O_RDWR, 0644);
 	if (fd == -1)
-		return (-1);
+		exit(EXIT_FAILURE);
 	(dup2(fd, 0), close(fd));
 	(dup2(fds[WRITE], 1), close(fds[WRITE]));
 	argv = ft_split(com, ' ');
 	if (argv == NULL)
-		return (-1);
+		exit(EXIT_FAILURE);
 	check = check_command(argv[0], envp, &path);
 	if (check == -1)
-		return (-1);
+		exit(EXIT_FAILURE);
 	else if (check == 0)
 		exit(127);
 	execve(path, argv, envp);
 	exit(127);
-	return (0);
 }
 
-int	last_child(char *file, char *com, int fds[], char *envp[])
+void	last_child(char *file, char *com, int fds[], char *envp[])
 {
 	char	**argv;
 	char	*path;
@@ -50,20 +49,19 @@ int	last_child(char *file, char *com, int fds[], char *envp[])
 	close(fds[WRITE]);
 	fd = open(file, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
-		return (-1);
+		exit(EXIT_FAILURE);
 	(dup2(fd, 1), close(fd));
 	(dup2(fds[READ], 0), close(fds[READ]));
 	argv = ft_split(com, ' ');
 	if (argv == NULL)
-		return (-1);
+		exit(EXIT_FAILURE);
 	check = check_command(argv[0], envp, &path);
 	if (check == -1)
-		return (-1);
+		exit(EXIT_FAILURE);
 	else if (check == 0)
 		exit(127);
 	execve(path, argv, envp);
 	exit(127);
-	return (0);
 }
 
 int	main(int argc, char *argv[], char *envp[])
@@ -76,9 +74,9 @@ int	main(int argc, char *argv[], char *envp[])
 	(void)argv;
 
 	if (argc != 5)
-		return (0);
+		exit(EXIT_FAILURE);
 	if (pipe(fds) == -1)
-		return (0);
+		exit(EXIT_FAILURE);
 	i = 0;
 	while (i < argc - 3)
 	{
@@ -89,7 +87,6 @@ int	main(int argc, char *argv[], char *envp[])
 		}
 		else if (pid == 0)
 		{
-			//
 			if (i == 0)
 				first_child(argv[1], argv[2], fds, envp);
 			else if (i == 1)
@@ -97,7 +94,7 @@ int	main(int argc, char *argv[], char *envp[])
 			break ;
 		}
 		else
-			return (0);
+			exit(EXIT_FAILURE);
 		i++;
 	}
 	close(fds[WRITE]);
@@ -106,5 +103,5 @@ int	main(int argc, char *argv[], char *envp[])
 	int	last_status;
 	waitpid(pid, &last_status, 0);
 	while(wait(&status) != -1);
-	exit (WEXITSTATUS(last_status));
+	exit(WEXITSTATUS(last_status));
 }
