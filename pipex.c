@@ -6,7 +6,7 @@
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 13:50:16 by hahlee            #+#    #+#             */
-/*   Updated: 2022/12/26 20:15:13 by hahlee           ###   ########.fr       */
+/*   Updated: 2022/12/27 12:45:00 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ void	first_child(char *file, char *com, int fds[], char *envp[])
 	if (check == -1)
 		exit(EXIT_FAILURE);
 	else if (check == 0)
-		exit(127);
+		exit_127();
 	execve(path, argv, envp);
-	exit(127);
+	exit_127();
 }
 
 void	last_child(char *file, char *com, int fds[], char *envp[])
@@ -59,9 +59,9 @@ void	last_child(char *file, char *com, int fds[], char *envp[])
 	if (check == -1)
 		exit(EXIT_FAILURE);
 	else if (check == 0)
-		exit(127);
+		exit_127();
 	execve(path, argv, envp);
-	exit(127);
+	exit_127();
 }
 
 int	main(int argc, char *argv[], char *envp[])

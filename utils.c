@@ -6,7 +6,7 @@
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 13:52:01 by hahlee            #+#    #+#             */
-/*   Updated: 2022/12/23 18:11:15 by hahlee           ###   ########.fr       */
+/*   Updated: 2022/12/27 12:43:08 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,13 @@ char	**split_envp(char *envp[])
 		i++;
 	}
 	return (path);
+}
+
+void	exit_127(void)
+{
+	const char	*str = "command not found\n";
+	write(2, str, ft_strlen(str));
+	exit(127);
 }
 
 int	double_free(char **str, int result)
