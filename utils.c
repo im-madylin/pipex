@@ -6,7 +6,7 @@
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 13:52:01 by hahlee            #+#    #+#             */
-/*   Updated: 2022/12/27 12:43:08 by hahlee           ###   ########.fr       */
+/*   Updated: 2022/12/27 17:16:29 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,56 @@ char	**split_envp(char *envp[])
 	return (path);
 }
 
+char	**split_com(char *com)
+{
+	char	**result;
+	char	*start;
+	int		i;
+	int		j;
+	int		temp;
+
+	result = ft_split(com, ' ');
+	if (result == NULL)
+		return (NULL);
+	i = 0;
+	while (result[i])
+	{
+		j = 0;
+		while (result[i][j])
+		{
+			if (result[i][0] == '\'')
+			{
+				start = com;
+				temp = i;
+				//수정필요
+			}
+			com++;
+			j++;
+		}
+		
+	}
+	if (result[i][0] == '\'')
+	{
+		start = ft_strnstr(com, result[i], -1);
+		safety_free(result[i], 0);
+		temp = i;
+		i++;
+		while (result[i])
+		{
+			if (result[i][ft_strlen(result[i]) - 1] == '\'')
+			{
+				result[temp] = ft_substr(com, start, ft_strnstr(com, result[i], ))
+			}
+			safety_free(result[i], 0);
+			i++;
+		}
+	}
+}
+
 void	exit_127(void)
 {
 	const char	*str = "command not found\n";
+	
 	write(2, str, ft_strlen(str));
 	exit(127);
 }
