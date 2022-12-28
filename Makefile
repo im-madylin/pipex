@@ -6,7 +6,7 @@
 #    By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/28 13:49:22 by hahlee            #+#    #+#              #
-#    Updated: 2022/12/28 16:51:37 by hahlee           ###   ########.fr        #
+#    Updated: 2022/12/28 21:19:03 by hahlee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ LDFLAGS	= -I /usr/local/include -L libft -L /usr/local/lib/ -lft
 
 OUTDIR	= out/
 MANDATORY_OUTDIR = out/pipex_mandatory
-SRCS	= pipex.c utils.c ready_to_execve.c
+SRCS	= pipex_bonus.c utils_bonus.c ready_to_execve_bonus.c
 OBJS	= $(SRCS:%.c=$(OUTDIR)%.o)
 
 all : $(NAME)
