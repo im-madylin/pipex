@@ -6,7 +6,7 @@
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/23 13:52:01 by hahlee            #+#    #+#             */
-/*   Updated: 2022/12/27 17:16:29 by hahlee           ###   ########.fr       */
+/*   Updated: 2022/12/28 15:12:44 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,19 +28,19 @@ int	check_command(char *com, char *envp[], char **result)
 		return (-1);
 	temp = ft_strjoin("/", com);
 	if (temp == NULL)
-		return (double_free(path, -1));
+		return (double_free(&path, -1));
 	i = 0;
 	while(path[i])
 	{
 		*result = ft_strjoin(path[i], temp);
 		if (*result == NULL)
-			return (double_free(path, -1), safety_free(temp, -1));
+			return (double_free(&path, -1), safety_free(&temp, -1));
 		if (access(*result, X_OK) == 0)
-			return (double_free(path, 1), safety_free(temp, 1));
-		safety_free(*result, 0);
+			return (double_free(&path, 1), safety_free(&temp, 1));
+		safety_free(result, 0);
 		i++;
 	}
-	return (double_free(path, 0), safety_free(temp, 0));
+	return (double_free(&path, 0), safety_free(&temp, 0));
 }
 
 char	**split_envp(char *envp[])
@@ -68,8 +68,8 @@ char	**split_com(char *com)
 {
 	char	**result;
 	char	*start;
+	char	*end;
 	int		i;
-	int		j;
 	int		temp;
 
 	result = ft_split(com, ' ');
@@ -78,36 +78,24 @@ char	**split_com(char *com)
 	i = 0;
 	while (result[i])
 	{
-		j = 0;
-		while (result[i][j])
+		if (result[i][0] == '\'')
 		{
-			if (result[i][0] == '\'')
+			temp = i;
+			start = ft_strnstr(com, result[i], -1) + 1;
+			while (result[i])
 			{
-				start = com;
-				temp = i;
-				//수정필요
+				safety_free(&(result[i]), 0);
+				i++;
 			}
-			com++;
-			j++;
+			end = com + (ft_strlen(com) - 1);
+			result[temp] = ft_substr(com, start - com, end - start);
+			if (result[temp] == NULL)
+				return (double_free(&result, 0), NULL);
+			break;
 		}
-		
-	}
-	if (result[i][0] == '\'')
-	{
-		start = ft_strnstr(com, result[i], -1);
-		safety_free(result[i], 0);
-		temp = i;
 		i++;
-		while (result[i])
-		{
-			if (result[i][ft_strlen(result[i]) - 1] == '\'')
-			{
-				result[temp] = ft_substr(com, start, ft_strnstr(com, result[i], ))
-			}
-			safety_free(result[i], 0);
-			i++;
-		}
 	}
+	return (result);
 }
 
 void	exit_127(void)
@@ -118,25 +106,25 @@ void	exit_127(void)
 	exit(127);
 }
 
-int	double_free(char **str, int result)
+int	double_free(char ***str, int result)
 {
 	int	i;
 
 	i = 0;
-	while (str[i])
+	while ((*str)[i])
 	{
-		free(str[i]);
-		str[i] = NULL;
+		free((*str)[i]);
+		(*str)[i] = NULL;
 		i++;
 	}
-	free(str);
-	str = NULL;
+	free(*str);
+	*str = NULL;
 	return (result);
 }
 
-int	safety_free(char *str, int result)
+int	safety_free(char **str, int result)
 {
-	free(str);
-	str = NULL;
+	free(*str);
+	*str = NULL;
 	return (result);
 }
