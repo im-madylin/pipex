@@ -6,7 +6,7 @@
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 16:49:35 by hahlee            #+#    #+#             */
-/*   Updated: 2022/12/28 17:02:39 by hahlee           ###   ########.fr       */
+/*   Updated: 2022/12/28 18:56:27 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	**split_com(char *com)
 	i = 0;
 	while (result[i])
 	{
-		if (result[i][0] == '\'')
+		if (result[i][0] == '\'' || result[i][0] == '\"')
 		{
 			start = ft_strnstr(com, result[i], -1) + 1;
 			end = com + (ft_strlen(com) - 1);

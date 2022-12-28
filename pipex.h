@@ -6,7 +6,7 @@
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 13:49:32 by hahlee            #+#    #+#             */
-/*   Updated: 2022/12/28 16:54:36 by hahlee           ###   ########.fr       */
+/*   Updated: 2022/12/28 18:03:39 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ int		combining_path(char **path, char *com, char **result);
 char	**split_envp(char *envp[]);
 
 /* utils.c */
-void	exit_127(void);
+void	exit_error(int code, char *name);
+void	ft_puterror(char *str);
 int		double_free(char ***str, int result);
 int		safety_free(char **str, int result);
 

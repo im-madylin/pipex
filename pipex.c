@@ -6,7 +6,7 @@
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 13:50:16 by hahlee            #+#    #+#             */
-/*   Updated: 2022/12/28 16:56:58 by hahlee           ###   ########.fr       */
+/*   Updated: 2022/12/28 18:43:54 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	first_child(char *file, char *com, int fds[], char *envp[])
 	close(fds[READ]);
 	fd = open(file, O_RDWR, 0644);
 	if (fd == -1)
-		exit(EXIT_FAILURE);
+		exit_error(1, file);
 	(dup2(fd, 0), close(fd));
 	(dup2(fds[WRITE], 1), close(fds[WRITE]));
 	argv = split_com(com);
@@ -78,9 +78,9 @@ void	first_child(char *file, char *com, int fds[], char *envp[])
 	if (check == -1)
 		exit(EXIT_FAILURE);
 	else if (check == 0)
-		exit_127();
+		exit_error(127, argv[0]);
 	execve(path, argv, envp);
-	exit_127();
+	exit_error(127, argv[0]);
 }
 
 void	last_child(char *file, char *com, int fds[], char *envp[])
@@ -93,7 +93,7 @@ void	last_child(char *file, char *com, int fds[], char *envp[])
 	close(fds[WRITE]);
 	fd = open(file, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
-		exit(EXIT_FAILURE);
+		exit_error(1, file);
 	(dup2(fd, 1), close(fd));
 	(dup2(fds[READ], 0), close(fds[READ]));
 	argv = split_com(com);
@@ -103,7 +103,7 @@ void	last_child(char *file, char *com, int fds[], char *envp[])
 	if (check == -1)
 		exit(EXIT_FAILURE);
 	else if (check == 0)
-		exit_127();
+		exit_error(127, argv[0]);
 	execve(path, argv, envp);
-	exit_127();
+	exit_error(127, argv[0]);
 }
