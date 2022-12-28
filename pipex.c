@@ -6,13 +6,57 @@
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 13:50:16 by hahlee            #+#    #+#             */
-/*   Updated: 2022/12/28 15:32:50 by hahlee           ###   ########.fr       */
+/*   Updated: 2022/12/28 16:56:58 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-#include <stdio.h> //
+int	main(int argc, char *argv[], char *envp[])
+{
+	int		fds[2];
+	pid_t	pid;
+	int		status;
+	int		last_status;
+
+	if (argc != 5)
+		exit(EXIT_FAILURE);
+	if (pipe(fds) == -1)
+		exit(EXIT_FAILURE);
+	pid = fork_child(argc, argv, envp, fds);
+	if (pid < 0)
+		exit(EXIT_FAILURE);
+	close(fds[WRITE]);
+	close(fds[READ]);
+	waitpid(pid, &last_status, 0);
+	while (wait(&status) != -1)
+		continue ;
+	exit(WEXITSTATUS(last_status));
+}
+
+int	fork_child(int argc, char *argv[], char *envp[], int fds[])
+{
+	pid_t	pid;
+	int		i;
+
+	i = 0;
+	while (i < argc - 3)
+	{
+		pid = fork();
+		if (pid == 0)
+		{
+			if (i == 0)
+				first_child(argv[1], argv[2], fds, envp);
+			else if (i == 1)
+				last_child(argv[4], argv[3], fds, envp);
+			break ;
+		}
+		else if (pid < 0)
+			return (-1);
+		i++;
+	}
+	return (pid);
+}
 
 void	first_child(char *file, char *com, int fds[], char *envp[])
 {
@@ -62,40 +106,4 @@ void	last_child(char *file, char *com, int fds[], char *envp[])
 		exit_127();
 	execve(path, argv, envp);
 	exit_127();
-}
-
-int	main(int argc, char *argv[], char *envp[])
-{
-	int		fds[2];
-	pid_t	pid;
-	int		status;
-	int		i;
-
-	if (argc != 5)
-		exit(EXIT_FAILURE);
-	if (pipe(fds) == -1)
-		exit(EXIT_FAILURE);
-	i = 0;
-	while (i < argc - 3)
-	{
-		pid = fork();
-		if (pid == 0)
-		{
-			if (i == 0)
-				first_child(argv[1], argv[2], fds, envp);
-			else if (i == 1)
-				last_child(argv[4], argv[3], fds, envp);
-			break ;
-		}
-		else if (pid < 0)
-			exit(EXIT_FAILURE);
-		i++;
-	}
-	close(fds[WRITE]);
-	close(fds[READ]);
-
-	int	last_status;
-	waitpid(pid, &last_status, 0);
-	while(wait(&status) != -1);
-	exit(WEXITSTATUS(last_status));
 }
