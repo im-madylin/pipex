@@ -6,7 +6,7 @@
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 15:15:22 by hahlee            #+#    #+#             */
-/*   Updated: 2022/12/29 12:55:11 by hahlee           ###   ########.fr       */
+/*   Updated: 2022/12/29 16:36:28 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,19 @@
 # define NEW 0
 # define OLD 1
 
-/* pipex.c */
-int		fork_child(int argc, char *argv[], char *envp[]);
-void	first_child(char *file, char *com, int fds[], char *envp[]);
-void	middle_child(char *com, int fds[][2], char *envp[]);
-void	last_child(char *file, char *com, int fds[], char *envp[]);
+typedef struct s_argvs
+{
+	int		argc;
+	char	**argv;
+	char	**envp;
+	int		here_doc;
+}	t_argvs;
+
+/* main.c */
+int		fork_child(t_argvs argvs);
+void	first_child(t_argvs argvs, int fds[]);
+void	middle_child(t_argvs argvs, int fds[][2], int index);
+void	last_child(t_argvs argvs, int fds[]);
 
 /* ready_to_execve.c */
 char	**split_com(char *com);

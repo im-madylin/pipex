@@ -6,7 +6,7 @@
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/22 13:53:53 by hahlee            #+#    #+#             */
-/*   Updated: 2022/12/29 13:34:58 by hahlee           ###   ########.fr       */
+/*   Updated: 2022/12/29 16:42:52 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,25 @@
 
 #include <stdio.h> //
 int	main(int argc, char *argv[], char *envp[])
-{
+{	
+	t_argvs	argvs;
 	pid_t	pid;
 	int		status;
 	int		last_status;
 
 	if (argc < 5)
 		exit(EXIT_FAILURE);
-	pid = fork_child(argc, argv, envp);
+	ft_memset(&argvs, 0, sizeof(argvs));
+	if (ft_strnstr(argv[1], "here_doc", -1) != NULL)
+	{
+		if (argc < 6)
+			exit(EXIT_FAILURE);
+		argvs.here_doc = 1;
+	}
+	argvs.argc = argc;
+	argvs.argv = argv;
+	argvs.envp = envp;
+	pid = fork_child(argvs);
 	if (pid < 0)
 		exit(EXIT_FAILURE);
 	waitpid(pid, &last_status, 0);
@@ -30,14 +41,14 @@ int	main(int argc, char *argv[], char *envp[])
 	exit(WEXITSTATUS(last_status));
 }
 
-int	fork_child(int argc, char *argv[], char *envp[])
+int	fork_child(t_argvs argvs)
 {
 	pid_t	pid;
 	int		fds[2][2];
 	int		last_com;
 	int		i;
 
-	last_com = argc - 4;
+	last_com = argvs.argc - 4;
 	i = 0;
 	fds[NEW][READ] = -1;
 	fds[NEW][WRITE] = -1;
@@ -54,11 +65,11 @@ int	fork_child(int argc, char *argv[], char *envp[])
 		else if (pid == 0)
 		{
 			if (i == 0)
-				first_child(argv[1], argv[2], fds[NEW], envp);
+				first_child(argvs, fds[NEW]);
 			else if (i == last_com)
-				last_child(argv[argc - 1], argv[argc - 2], fds[NEW], envp);
+				last_child(argvs, fds[NEW]);
 			else
-				middle_child(argv[i + 2], fds, envp);
+				middle_child(argvs, fds, i + 2);
 		}
 		(close(fds[OLD][READ]), close(fds[OLD][WRITE]));
 		i++;
@@ -66,7 +77,7 @@ int	fork_child(int argc, char *argv[], char *envp[])
 	return (pid);
 }
 
-void	first_child(char *file, char *com, int fds[], char *envp[])
+void	first_child(t_argvs argvs, int fds[])
 {
 	char	**argv;
 	char	*path;
@@ -74,24 +85,24 @@ void	first_child(char *file, char *com, int fds[], char *envp[])
 	int		check;
 
 	close(fds[READ]);
-	fd = open(file, O_RDWR, 0644);
+	fd = open(argvs.argv[1], O_RDWR, 0644);
 	if (fd == -1)
-		exit_error(1, file);
+		exit_error(1, argvs.argv[1]);
 	(dup2(fd, 0), close(fd));
 	(dup2(fds[WRITE], 1), close(fds[WRITE]));
-	argv = split_com(com);
+	argv = split_com(argvs.argv[2]);
 	if (argv == NULL)
 		exit(EXIT_FAILURE);
-	check = check_command(argv[0], envp, &path);
+	check = check_command(argv[0], argvs.envp, &path);
 	if (check == -1)
 		exit(EXIT_FAILURE);
 	else if (check == 0)
 		exit_error(127, argv[0]);
-	execve(path, argv, envp);
+	execve(path, argv, argvs.envp);
 	exit_error(127, argv[0]);
 }
 
-void	middle_child(char *com, int fds[][2], char *envp[])
+void	middle_child(t_argvs argvs, int fds[][2], int index)
 {
 	char	**argv;
 	char	*path;
@@ -100,19 +111,19 @@ void	middle_child(char *com, int fds[][2], char *envp[])
 	(close(fds[OLD][WRITE]), close(fds[NEW][READ]));
 	(dup2(fds[OLD][READ], 0), close(fds[OLD][READ]));
 	(dup2(fds[NEW][WRITE], 1), close(fds[NEW][WRITE]));
-	argv = split_com(com);
+	argv = split_com(argvs.argv[index]);
 	if (argv == NULL)
 		exit(EXIT_FAILURE);
-	check = check_command(argv[0], envp, &path);
+	check = check_command(argv[0], argvs.envp, &path);
 	if (check == -1)
 		exit(EXIT_FAILURE);
 	else if (check == 0)
 		exit_error(127, argv[0]);
-	execve(path, argv, envp);
+	execve(path, argv, argvs.envp);
 	exit_error(127, argv[0]);
 }
 
-void	last_child(char *file, char *com, int fds[], char *envp[])
+void	last_child(t_argvs argvs, int fds[])
 {
 	char	**argv;
 	char	*path;
@@ -120,20 +131,20 @@ void	last_child(char *file, char *com, int fds[], char *envp[])
 	int		check;
 
 	close(fds[WRITE]);
-	fd = open(file, O_RDWR | O_CREAT | O_TRUNC, 0644);
+	fd = open(argvs.argv[argvs.argc - 1], O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
-		exit_error(1, file);
+		exit_error(1, argvs.argv[argvs.argc - 1]);
 	(dup2(fd, 1), close(fd));
 	(dup2(fds[READ], 0), close(fds[READ]));
-	argv = split_com(com);
+	argv = split_com(argvs.argv[argvs.argc - 2]);
 	if (argv == NULL)
 		exit(EXIT_FAILURE);
-	check = check_command(argv[0], envp, &path);
+	check = check_command(argv[0], argvs.envp, &path);
 	if (check == -1)
 		exit(EXIT_FAILURE);
 	else if (check == 0) //없어도 됨
 		exit_error(127, argv[0]);
-	execve(path, argv, envp);
+	execve(path, argv, argvs.envp);
 	exit_error(127, argv[0]);
 }
 
