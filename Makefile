@@ -6,7 +6,7 @@
 #    By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/28 13:49:22 by hahlee            #+#    #+#              #
-#    Updated: 2022/12/28 21:19:03 by hahlee           ###   ########.fr        #
+#    Updated: 2022/12/29 14:32:47 by hahlee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,8 @@ SRCS	= pipex_bonus.c utils_bonus.c ready_to_execve_bonus.c
 OBJS	= $(SRCS:%.c=$(OUTDIR)%.o)
 
 all : $(NAME)
+
+bonus : $(NAME)
 
 $(OUTDIR):
 	mkdir $@
