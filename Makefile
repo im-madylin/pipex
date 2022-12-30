@@ -6,12 +6,12 @@
 #    By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/28 13:49:22 by hahlee            #+#    #+#              #
-#    Updated: 2022/12/30 14:09:11 by hahlee           ###   ########.fr        #
+#    Updated: 2022/12/30 15:27:15 by hahlee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= pipex
-CFLAGS	= -Wall -Wextra -Werror
+CFLAGS	= -Wall -Wextra -Werror -fsanitize=address
 LDFLAGS	= -I /usr/local/include -L libft -L /usr/local/lib/ -lft
 
 OUTDIR	= out/
