@@ -6,7 +6,7 @@
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/22 13:53:53 by hahlee            #+#    #+#             */
-/*   Updated: 2022/12/29 16:42:52 by hahlee           ###   ########.fr       */
+/*   Updated: 2022/12/30 15:14:13 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,14 @@ int	main(int argc, char *argv[], char *envp[])
 	if (argc < 5)
 		exit(EXIT_FAILURE);
 	ft_memset(&argvs, 0, sizeof(argvs));
+	argvs.cmd1 = 2;
 	if (ft_strnstr(argv[1], "here_doc", -1) != NULL)
 	{
 		if (argc < 6)
 			exit(EXIT_FAILURE);
 		argvs.here_doc = 1;
+		argvs.cmd1 = 3;
+		get_here_doc(argv[2]);
 	}
 	argvs.argc = argc;
 	argvs.argv = argv;
@@ -39,6 +42,32 @@ int	main(int argc, char *argv[], char *envp[])
 	while (wait(&status) != -1)
 		continue ;
 	exit(WEXITSTATUS(last_status));
+}
+
+int	get_here_doc(char *limiter)
+{
+	int		fd;
+	char	*tmp;
+
+	fd = open("temp", O_RDWR | O_CREAT | O_TRUNC, 0644);
+	if (fd < 0)
+		return (-1);
+	while (1)
+	{
+		write(1, "here_doc> ", 10);
+		tmp = get_next_line(0);
+		if (tmp == NULL)
+			break ; //temp 파일제거
+		if (ft_strnstr(tmp, limiter, -1) != NULL)
+		{
+			safety_free(&tmp, 0);
+			break ;
+		}
+		write(fd, tmp, ft_strlen(tmp));
+		safety_free(&tmp, 0);
+	}
+	close(fd);
+	return (0);
 }
 
 int	fork_child(t_argvs argvs)

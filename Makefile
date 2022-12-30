@@ -6,7 +6,7 @@
 #    By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/28 13:49:22 by hahlee            #+#    #+#              #
-#    Updated: 2022/12/29 14:32:47 by hahlee           ###   ########.fr        #
+#    Updated: 2022/12/30 14:09:11 by hahlee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,8 +15,7 @@ CFLAGS	= -Wall -Wextra -Werror
 LDFLAGS	= -I /usr/local/include -L libft -L /usr/local/lib/ -lft
 
 OUTDIR	= out/
-MANDATORY_OUTDIR = out/pipex_mandatory
-SRCS	= pipex_bonus.c utils_bonus.c ready_to_execve_bonus.c
+SRCS	= pipex_bonus.c utils_bonus.c ready_to_execve_bonus.c gnl/get_next_line.c gnl/get_next_line_utils.c
 OBJS	= $(SRCS:%.c=$(OUTDIR)%.o)
 
 all : $(NAME)
@@ -25,12 +24,11 @@ bonus : $(NAME)
 
 $(OUTDIR):
 	mkdir $@
+	mkdir $@/gnl
 
 $(NAME) : $(OBJS)
 	$(MAKE) -j -C libft
 	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS)
-$(MANDATORY_OUTDIR):
-	mkdir $@
 
 clean :
 	$(MAKE) -j -C libft clean
@@ -44,7 +42,7 @@ re :
 	$(MAKE) fclean
 	$(MAKE) all
 
-$(OBJS): $(OUTDIR)%.o: %.c | $(OUTDIR) $(MANDATORY_OUTDIR)
+$(OBJS): $(OUTDIR)%.o: %.c | $(OUTDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 .PHONY : all bonus clean fclean re
