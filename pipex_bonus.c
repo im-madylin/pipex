@@ -6,7 +6,7 @@
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/22 13:53:53 by hahlee            #+#    #+#             */
-/*   Updated: 2023/01/02 12:59:00 by hahlee           ###   ########.fr       */
+/*   Updated: 2023/01/03 14:39:32 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ int	main(int argc, char *argv[], char *envp[])
 	pid = fork_child(argvs);
 	if (pid < 0)
 		exit(EXIT_FAILURE);
-	unlink("temp");
+	if (argvs.here_doc)
+		unlink("temp");
 	waitpid(pid, &last_status, 0);
 	while (wait(&status) != -1)
 		continue ;
@@ -71,7 +72,7 @@ int	get_here_doc(char *limiter)
 			unlink("temp");
 			return (-1);
 		}
-		if (!ft_strncmp(tmp, limiter, ft_strlen(limiter)))
+		if (!ft_strncmp(tmp, limiter, ft_strlen(tmp)))
 		{
 			safety_free(&tmp, 0);
 			break ;

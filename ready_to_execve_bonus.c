@@ -6,7 +6,7 @@
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 19:41:11 by hahlee            #+#    #+#             */
-/*   Updated: 2022/12/28 19:41:25 by hahlee           ###   ########.fr       */
+/*   Updated: 2023/01/03 14:07:21 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ int	check_command(char *com, char *envp[], char **result)
 	char	*temp;
 	int		check;
 
+	if (com == NULL)
+		exit_error(127, "");
 	if (access(com, X_OK) == 0)
 	{
 		*result = com;
