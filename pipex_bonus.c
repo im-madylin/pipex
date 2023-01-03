@@ -6,7 +6,7 @@
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/22 13:53:53 by hahlee            #+#    #+#             */
-/*   Updated: 2023/01/03 14:39:32 by hahlee           ###   ########.fr       */
+/*   Updated: 2023/01/03 15:51:31 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	get_here_doc(char *limiter)
 			unlink("temp");
 			return (-1);
 		}
-		if (!ft_strncmp(tmp, limiter, ft_strlen(tmp)))
+		if (!ft_strncmp(tmp, limiter, ft_strlen(tmp) - 1))
 		{
 			safety_free(&tmp, 0);
 			break ;
