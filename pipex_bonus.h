@@ -6,7 +6,7 @@
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 15:15:22 by hahlee            #+#    #+#             */
-/*   Updated: 2022/12/30 17:14:50 by hahlee           ###   ########.fr       */
+/*   Updated: 2023/01/04 15:16:41 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,16 @@ typedef struct s_argvs
 	int		here_doc;
 }	t_argvs;
 
-/* main.c */
+/* pipex.c */
+int		set_argvs_struct(t_argvs *argvs, int argc, char *argv[], char *envp[]);
+int		get_here_doc(char *limiter);
+
+/* child_process.c */
 int		fork_child(t_argvs argvs);
+void	send_child_func(t_argvs argvs, int fds[][2], int i);
 void	first_child(t_argvs argvs, int fds[]);
 void	middle_child(t_argvs argvs, int fds[][2], int index);
 void	last_child(t_argvs argvs, int fds[]);
-int		get_here_doc(char *limiter);
-int		set_argvs_struct(t_argvs *argvs, int argc, char *argv[], char *envp[]);
-void	send_child_func(t_argvs argvs, int fds[][2], int i);
 
 /* ready_to_execve.c */
 char	**split_com(char *com);
