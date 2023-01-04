@@ -6,7 +6,7 @@
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/22 13:53:53 by hahlee            #+#    #+#             */
-/*   Updated: 2023/01/04 13:07:01 by hahlee           ###   ########.fr       */
+/*   Updated: 2023/01/04 16:44:51 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,11 @@ int	main(int argc, char *argv[], char *envp[])
 	pid = fork_child(argvs);
 	if (pid < 0)
 		exit(EXIT_FAILURE);
-	if (argvs.here_doc)
-		unlink("temp");
 	waitpid(pid, &last_status, 0);
 	while (wait(&status) != -1)
 		continue ;
+	if (argvs.here_doc)
+		unlink("temp");
 	exit(WEXITSTATUS(last_status));
 }
 
@@ -44,9 +44,10 @@ int	set_argvs_struct(t_argvs *argvs, int argc, char *argv[], char *envp[])
 	argvs->cmd_count = argc - 4;
 	if (!ft_strncmp(argv[1], "here_doc", -1))
 	{
-		if (argc < 6)
+		if (argc != 6)
 			return (-1);
 		argvs->cmd1 = 3;
+		argvs->cmd_count = argc - 5;
 		argvs->here_doc = 1;
 		if (get_here_doc(argv[2]) == -1)
 			return (-1);

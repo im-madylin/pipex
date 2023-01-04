@@ -6,7 +6,7 @@
 /*   By: hahlee <hahlee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 12:58:17 by hahlee            #+#    #+#             */
-/*   Updated: 2023/01/03 15:25:29 by hahlee           ###   ########.fr       */
+/*   Updated: 2023/01/04 16:51:33 by hahlee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,6 @@ void	middle_child(t_argvs argvs, int fds[][2], int index)
 	check = check_command(argv[0], argvs.envp, &path);
 	if (check == -1)
 		exit(EXIT_FAILURE);
-	else if (check == 0)
-		exit_error(127, argv[0]);
 	execve(path, argv, argvs.envp);
 	exit_error(127, argv[0]);
 }
